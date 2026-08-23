@@ -1,15 +1,15 @@
 package br.pucminas.labdamd.central;
 
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import io.grpc.stub.StreamObserver;
-
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+import io.grpc.stub.StreamObserver;
+
 public class ServidorCentral {
-    // TODO: substitua pelo seu OFFSET pessoal (ver seção 3.3)
+    
     static final int OFFSET = 89;
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -38,6 +38,24 @@ public class ServidorCentral {
 
             observador.onNext(resposta);
             observador.onCompleted();
+        }
+
+        @Override
+        public void acompanharAvisos(InscricaoAvisos pedido, StreamObserver<Aviso> observador) {
+            System.out.println("[gRPC] AcompanharAvisos: " + pedido.getNomeAluno() + " se inscreveu.");
+            try {
+                for (int i = 1; i <= 5; i++) {
+                    Aviso aviso = Aviso.newBuilder()
+                            .setNumero(i)
+                            .setTexto("Aviso #" + i + ": a aula começa em " + (5 - i) + " minuto(s)!")
+                            .build();
+                    observador.onNext(aviso);
+                    Thread.sleep(2000);
+                }
+                observador.onCompleted();
+            } catch (InterruptedException e) {
+                observador.onError(e);
+            }
         }
     }
 }

@@ -1,12 +1,11 @@
 package br.pucminas.labdamd.central;
 
+import java.util.Scanner;
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.util.Scanner;
-
 public class ClienteCentral {
-    // TODO: substitua pelo seu OFFSET pessoal (ver seção 3.3) — use o MESMO valor do servidor
     static final int OFFSET = 89;
 
     public static void main(String[] args) {
@@ -27,6 +26,15 @@ public class ClienteCentral {
             // Chamada unária: parece uma chamada de método local, mas atravessa a rede
             PerguntaHorario pergunta = PerguntaHorario.newBuilder().setNomeAluno(nome).build();
             RespostaHorario resposta = stub.consultarHorario(pergunta);
+
+            // Chamada com streaming: o servidor envia vários Avisos ao longo do tempo
+            System.out.println("[gRPC] Inscrevendo-se para acompanhar avisos...");
+            InscricaoAvisos inscricao = InscricaoAvisos.newBuilder().setNomeAluno(nome).build();
+            java.util.Iterator<Aviso> avisos = stub.acompanharAvisos(inscricao);
+            while (avisos.hasNext()) {
+                Aviso aviso = avisos.next();
+                System.out.println("[gRPC] Recebido: " + aviso.getTexto());
+            }
             System.out.println("[gRPC] " + resposta.getMensagem());
         } finally {
             canal.shutdown();
