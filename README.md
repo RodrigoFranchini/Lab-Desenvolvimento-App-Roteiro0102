@@ -1,6 +1,6 @@
 # Laboratório de Desenvolvimento de Aplicações Móveis
 
-Repositório das atividades da disciplina **Laboratório de Desenvolvimento de Aplicações Móveis**, do curso de Engenharia de Software da PUC Minas.
+Repositório das atividades da disciplina **Laboratório de Desenvolvimento de Aplicações Móveis**, do curso de Engenharia de Software da PUC Minas. Este repositório abrange o Roteiro 01 e 02 da disciplina.
 
 ## Conteúdo
 
